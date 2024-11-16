@@ -53,6 +53,12 @@ class HostelRoom(models.Model):
 		print("Obtenemos los registros del modelo hostel.room.member", all_members)
 		return True
 
+	def update_room_no(self):
+		#Actualizar el campo room_no de una habitación
+		self.ensure_one()
+		self.room_no = "RM002"
+
+
 
 class HostelRoomMember(models.Model):
 	_name = 'hostel.room.member'
