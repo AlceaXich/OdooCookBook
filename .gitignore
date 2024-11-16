@@ -8,5 +8,5 @@
 *.vscode
 /**/*.pyc
 /**/*__pycache__
-/**/*.gitkeep
+*.gitkeep
 /**/*bak
