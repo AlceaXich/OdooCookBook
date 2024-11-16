@@ -58,6 +58,16 @@ class HostelRoom(models.Model):
 		self.ensure_one()
 		self.room_no = "RM002"
 
+	def find_room(self):
+		#Buscar registros con search
+		domain = [
+			'|',
+				'&', ('name', 'ilike', 'Room Name'),
+					('category_id.name', 'ilike', 'Category Name'),
+				'&', ('name', 'ilike', 'Second Room Name 2'),
+					('category_id.name', 'ilike', 'SecondCategory Name 2')
+		]
+		rooms = self.search(domain)
 
 
 class HostelRoomMember(models.Model):
