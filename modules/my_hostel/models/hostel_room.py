@@ -68,7 +68,49 @@ class HostelRoom(models.Model):
 					('category_id.name', 'ilike', 'SecondCategory Name 2')
 		]
 		rooms = self.search(domain)
+	
+	# Usando filter()
+	def filter_members(self):
+		#Buscamos todos los registros
+		all_rooms = self.search([])
+		#Llamamos al metodo para obtener los registros que cumplen con la codición
+		filtered_rooms = self.rooms_with_multiple_members(all_rooms)
+		print('Filtered Rooms: %s', filtered_rooms)
 
+	@api.model
+	def rooms_with_multiple_members(self, all_rooms):
+		#Es una función interna que evalúa cada habitación (registro) de all_rooms.
+		def predicate(room):
+			if len(room.member_ids) > 1:
+				return True
+		#Utiliza el método filtered de Odoo para aplicar la función predicate a cada registro del conjunto all_rooms.
+		#Devuelve un nuevo conjunto de registros (filtered_rooms) que cumplen la condición.
+		return all_rooms.filtered(predicate)
+
+	# Usando mapped()
+	def mapped_rooms(self):
+		all_rooms = self.search([])
+		room_authors = self.get_member_names(all_rooms)
+		print('Room Members: %s', room_authors)
+
+	@api.model
+	def get_member_names(self, all_rooms):
+		#Recorre el conjunto de registros (all_rooms) y extrae los valores del campo relacionado member_ids.name.
+		#Devuelve una lista con los nombres de los miembros de todas las habitaciones en all_rooms.
+		return all_rooms.mapped('member_ids.name')
+
+	# Usando sorted()
+	def sort_room(self):
+		all_rooms = self.search([])
+		#Llama al método para ordenar las habitaciones por el campo room_rating.
+		rooms_sorted = self.sort_rooms_by_rating(all_rooms)
+		print('Habitaciones antes de sorted: %s', all_rooms)
+		print('Habitaciones despues de sorted: %s', rooms_sorted)
+
+	@api.model
+	def sort_rooms_by_rating(self, all_rooms):
+		#Ordena el conjunto de registros (all_rooms) por el campo room_rating.
+		return all_rooms.sorted(key='room_rating')
 
 class HostelRoomMember(models.Model):
 	_name = 'hostel.room.member'
